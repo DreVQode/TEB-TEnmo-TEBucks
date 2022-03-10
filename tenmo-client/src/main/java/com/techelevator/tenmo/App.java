@@ -4,6 +4,8 @@ import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 
 public class App {
 
@@ -84,7 +86,23 @@ public class App {
         }
     }
 
-	private void viewCurrentBalance() {
+	private void viewCurrentBalance(accountId, Long id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authToken);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+                ResponseEntity<Auction> response = restTemplate.exchange(API_BASE_URL + id,
+                        HttpMethod.GET, entity, Auction.class);
+
+                if (response.getBody() != null) {
+                    auction = response.getBody();
+                }
+
+                return auction;
+            }
+
+
 		// TODO Auto-generated method stub
 		
 	}
