@@ -16,11 +16,23 @@ import java.util.List;
 public class JdbcUserDao implements UserDao {
 
     private static final BigDecimal STARTING_BALANCE = new BigDecimal("1000.00");
-    private JdbcTemplate jdbcTemplate;
 
+    private JdbcTemplate jdbcTemplate;
     public JdbcUserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+
+    public double viewCurrentBalance(String username) {
+
+        String sql = "SELECT balance FROM account WHERE user_id = ?";
+        id = currentUser.getUser().getId()
+        double currentBalance = jdbcTemplate.queryForObject(sql, Double.class, id);
+        System.out.println("Your current balance is: " + currentBalance);
+
+    }
+
+
 
     @Override
     public int findIdByUsername(String username) {

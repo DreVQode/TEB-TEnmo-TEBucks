@@ -4,6 +4,7 @@ import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import io.cucumber.java.eo.Do;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
@@ -86,22 +87,11 @@ public class App {
         }
     }
 
-	private void viewCurrentBalance(accountId, Long id) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-                ResponseEntity<Auction> response = restTemplate.exchange(API_BASE_URL + id,
-                        HttpMethod.GET, entity, Auction.class);
-
-                if (response.getBody() != null) {
-                    auction = response.getBody();
-                }
-
-                return auction;
-            }
-
+	private double viewCurrentBalance(Long id) {
+//            String sql = "SELECT balance FROM account WHERE user_id = ?";
+            currentUser.getUser().getId()
+//            double currentBalance = jdbcTemplate.queryForObject(sql, Double.class, id);
+//            System.out.println("Your current balance is: " + currentBalance);
 
 		// TODO Auto-generated method stub
 
