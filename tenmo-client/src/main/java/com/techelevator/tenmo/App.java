@@ -5,8 +5,8 @@ import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import io.cucumber.java.eo.Do;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
 
 public class App {
 
@@ -14,6 +14,7 @@ public class App {
 
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
+    private final RestTemplate restTemplate = new RestTemplate();
 
     private AuthenticatedUser currentUser;
 
@@ -87,12 +88,16 @@ public class App {
         }
     }
 
-	private double viewCurrentBalance(Long id) {
-//            String sql = "SELECT balance FROM account WHERE user_id = ?";
-//            currentUser.getUser().getId()
-//            double currentBalance = jdbcTemplate.queryForObject(sql, Double.class, id);
-//            System.out.println("Your current balance is: " + currentBalance);
+	private void viewCurrentBalance() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(currentUser.getToken());
 
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<Double> response = restTemplate.exchange(API_BASE_URL + "currentbalance", HttpMethod.GET,entity,Double.class);
+        Double balance = response.getBody();
+        System.out.println("Balance = " + balance);
 		// TODO Auto-generated method stub
 
 		
