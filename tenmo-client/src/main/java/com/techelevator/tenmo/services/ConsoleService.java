@@ -21,6 +21,12 @@ public class ConsoleService {
         return menuSelection;
     }
 
+
+
+
+
+
+
     public void printGreeting() {
         System.out.println("*********************");
         System.out.println("* Welcome to TEnmo! *");
@@ -45,6 +51,12 @@ public class ConsoleService {
         System.out.println("0: Exit");
         System.out.println();
     }
+
+    public void promptForTransferInfo() {
+
+    }
+
+
 
     public UserCredentials promptForCredentials() {
         String username = promptForString("Username: ");

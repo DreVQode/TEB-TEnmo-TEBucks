@@ -32,15 +32,11 @@ public class JdbcUserDao implements UserDao {
         return currentBalance;
     }
 
-    public User sendBucks(Long id, String username)  {
-        String sql = "SELECT username FROM tenmo_user WHERE user_id = ?";
-        jdbcTemplate.queryForObject(sql,id,username);
-        System.out.println("Enter ID of user you are sending to (0 to cancel):\n");
-        System.out.println("Enter amount");
-        if(amount <= 0){
-            
-        }
-    }
+//
+//    public User sendBucks()  {
+//        findAll();
+//    }
+//
 
 
 
@@ -99,6 +95,18 @@ public class JdbcUserDao implements UserDao {
         }
 
         return true;
+    }
+
+    @Override
+    public List<User> listOfUsersExcludingUserId(Long id) {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM tenmo_user WHERE user_id != ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
+        while(results.next()) {
+            User user = mapRowToUser(results);
+            users.add(user);
+        }
+        return users;
     }
 
     private User mapRowToUser(SqlRowSet rs) {

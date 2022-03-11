@@ -76,6 +76,7 @@ public class App {
             } else if (menuSelection == 3) {
                 viewPendingRequests();
             } else if (menuSelection == 4) {
+
                 sendBucks();
             } else if (menuSelection == 5) {
                 requestBucks();
@@ -99,9 +100,16 @@ public class App {
         Double balance = response.getBody();
         System.out.println("Balance = " + balance);
 		// TODO Auto-generated method stub
-
-		
 	}
+
+//    private void printListOfUsers() {
+//
+//    }
+
+
+
+
+
 
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
