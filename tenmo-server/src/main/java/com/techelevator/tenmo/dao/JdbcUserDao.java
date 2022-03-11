@@ -32,6 +32,16 @@ public class JdbcUserDao implements UserDao {
         return currentBalance;
     }
 
+    public User sendBucks(Long id, String username)  {
+        String sql = "SELECT username FROM tenmo_user WHERE user_id = ?";
+        jdbcTemplate.queryForObject(sql,id,username);
+        System.out.println("Enter ID of user you are sending to (0 to cancel):\n");
+        System.out.println("Enter amount");
+        if(amount <= 0){
+            
+        }
+    }
+
 
 
     @Override
