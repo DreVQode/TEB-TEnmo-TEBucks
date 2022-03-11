@@ -89,7 +89,7 @@ public class App {
 
 	private double viewCurrentBalance(Long id) {
 //            String sql = "SELECT balance FROM account WHERE user_id = ?";
-            currentUser.getUser().getId()
+//            currentUser.getUser().getId()
 //            double currentBalance = jdbcTemplate.queryForObject(sql, Double.class, id);
 //            System.out.println("Your current balance is: " + currentBalance);
 

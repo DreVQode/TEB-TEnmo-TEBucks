@@ -23,14 +23,13 @@ public class JdbcUserDao implements UserDao {
     }
 
 
-    public double viewCurrentBalance(String username) {
+    public double getCurrentBalance(String username) {
 
         String sql = "SELECT balance FROM account WHERE user_id = ?";
-        id = currentUser.getUser().getId()
-        double currentBalance = jdbcTemplate.queryForObject(sql, Double.class, id);
+        double currentBalance = jdbcTemplate.queryForObject(sql, Double.class, findByUsername(username));
         System.out.println("Your current balance is: " + currentBalance);
 
-    }
+    } return 
 
 
 
