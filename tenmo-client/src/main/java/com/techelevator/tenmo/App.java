@@ -8,6 +8,8 @@ import io.cucumber.java.eo.Do;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 public class App {
 
     private static final String API_BASE_URL = "http://localhost:8080/";
@@ -76,8 +78,8 @@ public class App {
             } else if (menuSelection == 3) {
                 viewPendingRequests();
             } else if (menuSelection == 4) {
-
-                sendBucks();
+                printListOfUsers();
+ //               sendBucks();
             } else if (menuSelection == 5) {
                 requestBucks();
             } else if (menuSelection == 0) {
@@ -102,11 +104,17 @@ public class App {
 		// TODO Auto-generated method stub
 	}
 
-//    private void printListOfUsers() {
-//
-//    }
+    private void printListOfUsers() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(currentUser.getToken());
 
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
 
+        ResponseEntity<List> response = restTemplate.exchange(API_BASE_URL + "/listofusers?idToFilter=1001", HttpMethod.GET,entity, List.class);
+        List userList = response.getBody();
+        System.out.println("Please select who you would like to transfer to: " + userList);
+    }
 
 
 

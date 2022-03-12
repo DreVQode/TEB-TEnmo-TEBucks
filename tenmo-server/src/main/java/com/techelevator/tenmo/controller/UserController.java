@@ -27,7 +27,7 @@ public class UserController {
        return userDao.getCurrentBalance(principal.getName());
     }
 
-    @RequestMapping (path= "/listofusers" , method = RequestMethod.GET)
+    @RequestMapping (path= "/listofusers?idToFilter" , method = RequestMethod.GET)
     public List<User> getUserList(@RequestParam Long idToFilter){
     List<User> allUsers = userDao.listOfUsersExcludingUserId(idToFilter);
         return allUsers;
