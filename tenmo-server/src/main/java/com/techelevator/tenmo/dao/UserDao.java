@@ -16,6 +16,6 @@ public interface UserDao {
 
     boolean create(String username, String password);
 
-    List<User> listOfUsersExcludingUserId(Long id);
+    List<User> listOfUsersExcludingUserId(int id);
 
 }

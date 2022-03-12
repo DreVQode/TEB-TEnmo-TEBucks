@@ -1,6 +1,7 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
@@ -111,7 +112,7 @@ public class App {
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<List> response = restTemplate.exchange(API_BASE_URL + "/listofusers?idToFilter=1001", HttpMethod.GET,entity, List.class);
+        ResponseEntity<List> response = restTemplate.exchange(API_BASE_URL + "/listofusers", HttpMethod.GET,entity, List.class);
         List userList = response.getBody();
         System.out.println("Please select who you would like to transfer to: " + userList);
     }
@@ -130,13 +131,22 @@ public class App {
 	}
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
-		
-	}
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(currentUser.getToken());
+        Transfer transfer = new Transfer();
+        //TODO set from accountId, to accountId, amount on transfer
+        HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+
+        ResponseEntity<Transfer> response = restTemplate.exchange(API_BASE_URL + "transfers", HttpMethod.POST,entity, Transfer.class);
+        transfer = response.getBody();
+        System.out.println("Transfer = " + transfer);
+        // TODO Auto-generated method stub
+    }
 
 	private void requestBucks() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

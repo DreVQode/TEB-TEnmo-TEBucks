@@ -98,7 +98,7 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public List<User> listOfUsersExcludingUserId(Long id) {
+    public List<User> listOfUsersExcludingUserId(int id) {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM tenmo_user WHERE user_id != ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
