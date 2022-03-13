@@ -32,16 +32,27 @@ public class UserController {
         return allUsers;
     }
 
+    //************  NEW METHOD ************\\
     @RequestMapping (path = "/transfers", method = RequestMethod.POST)
     public Transfer sendBucks(@RequestBody Transfer transfer) {
-//        TODO use info in transfer to adjust from_account, to_account and create transfer record
+        transfer.getAccountFrom();
+        transfer.getAccountTo();
+        transfer.getTransferAmount();
+//    TODO use info in transfer to adjust from_account, to_account and create transfer record
         return transfer;
     }
-// TODO: 1) get from_account (create dao method to get balance)
+
+    //************  NEW METHOD ************\\
+    @RequestMapping (path = "/transferhistory", method = RequestMethod.GET)
+    public Transfer getTransferDetails(){
+        return userDao.viewTransferHistory(getTransferDetails().getTransferId());
+    }
+
+    // TODO:
+//  1) get from_account (create dao method to get balance)
 //  2) subtract transfer amount from balance (create dao method to update balance amount)
 //  3) add transfer amount to to_account (create dao method to update balance)
 //  4) create dao method to create a transfer record in the table
-
 
 
 }

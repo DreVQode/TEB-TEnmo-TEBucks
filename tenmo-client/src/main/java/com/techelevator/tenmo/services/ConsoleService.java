@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
 
 import java.math.BigDecimal;
@@ -9,6 +10,7 @@ import java.util.Scanner;
 public class ConsoleService {
 
     private final Scanner scanner = new Scanner(System.in);
+    Scanner console = new Scanner(System.in);
 
     public int promptForMenuSelection(String prompt) {
         int menuSelection;
@@ -20,11 +22,6 @@ public class ConsoleService {
         }
         return menuSelection;
     }
-
-
-
-
-
 
 
     public void printGreeting() {
@@ -52,10 +49,11 @@ public class ConsoleService {
         System.out.println();
     }
 
-    public void promptForTransferInfo() {
-
+    public Transfer promptForTransfers() {
+        int userId = promptForInt("Enter User ID of Recipient: ");
+        BigDecimal transferAmount = promptForBigDecimal("Enter Amount to Transfer: ");
+        return new Transfer(userId, transferAmount);
     }
-
 
 
     public UserCredentials promptForCredentials() {
@@ -63,6 +61,7 @@ public class ConsoleService {
         String password = promptForString("Password: ");
         return new UserCredentials(username, password);
     }
+
 
     public String promptForString(String prompt) {
         System.out.print(prompt);

@@ -2,6 +2,7 @@ package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
@@ -9,6 +10,9 @@ import io.cucumber.java.eo.Do;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class App {
@@ -20,6 +24,9 @@ public class App {
     private final RestTemplate restTemplate = new RestTemplate();
 
     private AuthenticatedUser currentUser;
+
+    Double currentUserBalance = 0.00;
+    Double transferAmount = 0.00;
 
     public static void main(String[] args) {
         App app = new App();
@@ -79,8 +86,7 @@ public class App {
             } else if (menuSelection == 3) {
                 viewPendingRequests();
             } else if (menuSelection == 4) {
-                printListOfUsers();
- //               sendBucks();
+                sendBucks();
             } else if (menuSelection == 5) {
                 requestBucks();
             } else if (menuSelection == 0) {
@@ -101,9 +107,10 @@ public class App {
 
         ResponseEntity<Double> response = restTemplate.exchange(API_BASE_URL + "currentbalance", HttpMethod.GET,entity,Double.class);
         Double balance = response.getBody();
-        System.out.println("Balance = " + balance);
+        System.out.println("Your current balance is = " + balance);
 		// TODO Auto-generated method stub
-	}
+        currentUserBalance = balance;
+       	}
 
     private void printListOfUsers() {
         HttpHeaders headers = new HttpHeaders();
@@ -112,18 +119,30 @@ public class App {
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<List> response = restTemplate.exchange(API_BASE_URL + "/listofusers", HttpMethod.GET,entity, List.class);
-        List userList = response.getBody();
-        System.out.println("Please select who you would like to transfer to: " + userList);
+        ResponseEntity<User[]> response = restTemplate.exchange(API_BASE_URL + "/listofusers", HttpMethod.GET, entity, User[].class);
+        User[] userList = response.getBody();
+
+        for (User users : userList) {
+            System.out.println(users.getId() + " " + users.getUsername());
+        }
     }
 
+    //************  NEW METHOD ************\\
+    private void viewTransferHistory() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(currentUser.getToken());
+        Transfer transfer = new Transfer();
 
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-
-	private void viewTransferHistory() {
+        ResponseEntity<Transfer> response = restTemplate.exchange(API_BASE_URL + "transferhistory", HttpMethod.GET,entity,Transfer.class);
+        Transfer view = response.getBody();
+        System.out.println("Please enter transfer ID to view details (0 to cancel): \"\n " + view);
+        // TODO Auto-generated method stub
+    }
 		// TODO Auto-generated method stub
-		
-	}
+
 
 	private void viewPendingRequests() {
 		// TODO Auto-generated method stub
@@ -131,22 +150,63 @@ public class App {
 	}
 
 	private void sendBucks() {
+        viewCurrentBalance();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(currentUser.getToken());
-        Transfer transfer = new Transfer();
-        //TODO set from accountId, to accountId, amount on transfer
-        HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
 
-        ResponseEntity<Transfer> response = restTemplate.exchange(API_BASE_URL + "transfers", HttpMethod.POST,entity, Transfer.class);
-        transfer = response.getBody();
-        System.out.println("Transfer = " + transfer);
-        // TODO Auto-generated method stub
+        Transfer transfer = new Transfer();
+
+        if (currentUserBalance <= 0.00) {
+            System.out.println("Insufficient Funds for Transfer");
+        } else if (currentUserBalance > 0.00) {
+            System.out.println("");
+            System.out.println("You can transfer to the following users: ");
+            System.out.println("");
+            printListOfUsers();
+            System.out.println("");
+            consoleService.promptForTransfers();
+
+            if (transferAmount < 0 || transferAmount > currentUserBalance) {
+                System.out.println("Please enter a correct amount to transfer.");
+            } else {
+                //have not tested these 3 lines of code:
+                transfer.setTransferAmount(consoleService.promptForTransfers().transferAmount);
+                transfer.setAccountFrom(currentUser.getUser().getId());
+                transfer.setAccountTo(consoleService.promptForTransfers().accountTo);
+
+                HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+                ResponseEntity<Transfer> response = restTemplate.exchange(API_BASE_URL + "transfers", HttpMethod.POST, entity, Transfer.class);
+                transfer = response.getBody();
+
+                System.out.println("");
+                System.out.println("*** Transfer complete, your new balance is: " + currentUserBalance + " ***");
+                System.out.println("Transfer = " + transfer);
+
+                // TODO Auto-generated method stub
+            }
+        }
     }
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
-
-	}
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.setBearerAuth(currentUser.getToken());
+//        Transfer transfer = new Transfer();
+//        System.out.println("");
+//        System.out.println("You can request a transfer from the following users: ");
+//        System.out.println("");
+//        printListOfUsers();
+//        System.out.println("");
+//        consoleService.promptForTransfers();
+//        //TODO set from accountId, to accountId, amount on transfer
+//
+//        HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+//
+//        ResponseEntity<Transfer> response = restTemplate.exchange(API_BASE_URL + "transfers", HttpMethod.POST,entity, Transfer.class);
+//        transfer = response.getBody();
+//        System.out.println("Transfer = " + transfer);
+//        // TODO Auto-generated method stub
+    }
 
 }

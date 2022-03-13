@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,11 +33,37 @@ public class JdbcUserDao implements UserDao {
         return currentBalance;
     }
 
-//
-//    public User sendBucks()  {
-//        findAll();
-//    }
-//
+    //************  NEW METHOD ************\\
+    public Transfer viewTransferHistory(Long transferId) {
+//        Transfer transfers = new Transfer();
+        String sql = "SELECT * FROM transfer WHERE transfer_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
+
+        if (results.next()) {
+            return mapRowToTransfer(results);
+        } else {
+            return null;
+        }
+    }
+
+    //************  NEW METHOD ************\\
+    private Transfer mapRowToTransfer(SqlRowSet rs) {
+        Transfer transfer = new Transfer();
+        transfer.setTransferId(rs.getLong("transfer_id"));
+        transfer.setTransferTypeId(rs.getLong("transfer_type_id"));
+        transfer.setTransferStatusId(rs.getLong("transfer_status_id"));
+        transfer.setAccountFrom(rs.getLong("account_from"));
+        transfer.setAccountTo(rs.getLong("account_to"));
+        transfer.setTransferAmount(rs.getDouble("transfer_amount"));
+        return transfer;
+    }
+
+    //************  NEW METHOD ************\\
+    public User sendBucks(Long userId) {
+        String sql = "SELECT username FROM tenmo_user WHERE user_id = ?";
+        jdbcTemplate.queryForRowSet(sql, userId);
+        return sendBucks(userId);
+    }
 
 
 
