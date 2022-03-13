@@ -46,8 +46,11 @@ public class JdbcUserDao implements UserDao {
         }
     }
 
+
+
+
     //************  NEW METHOD ************\\
-    private Transfer mapRowToTransfer(SqlRowSet rs) {
+    public Transfer mapRowToTransfer(SqlRowSet rs) {
         Transfer transfer = new Transfer();
         transfer.setTransferId(rs.getLong("transfer_id"));
         transfer.setTransferTypeId(rs.getLong("transfer_type_id"));
@@ -59,12 +62,15 @@ public class JdbcUserDao implements UserDao {
     }
 
     //************  NEW METHOD ************\\
-    public User sendBucks(Long userId) {
-        String sql = "SELECT username FROM tenmo_user WHERE user_id = ?";
-        jdbcTemplate.queryForRowSet(sql, userId);
-        return sendBucks(userId);
-    }
+    public Transfer sendBucks(Long transferId) {
+        Transfer transfer = new Transfer();
+        String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES (2, 2, ?, ?, ?)"
+        + "RETURNING transfer_id";
 
+        jdbcTemplate.update(sql, transfer.accountFrom*2, transfer.accountTo*2, transfer.transferAmount);
+
+        return transfer;
+    }
 
 
     @Override

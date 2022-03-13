@@ -4,6 +4,7 @@ import com.techelevator.tenmo.dao.JdbcUserDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,10 +35,8 @@ public class UserController {
 
     //************  NEW METHOD ************\\
     @RequestMapping (path = "/transfers", method = RequestMethod.POST)
-    public Transfer sendBucks(@RequestBody Transfer transfer) {
-        transfer.getAccountFrom();
-        transfer.getAccountTo();
-        transfer.getTransferAmount();
+    public Transfer sendBucks(@RequestBody Transfer transfer, Principal principal) {
+        int userId = userDao.findIdByUsername(principal.getName());
 //    TODO use info in transfer to adjust from_account, to_account and create transfer record
         return transfer;
     }
@@ -47,6 +46,13 @@ public class UserController {
     public Transfer getTransferDetails(){
         return userDao.viewTransferHistory(getTransferDetails().getTransferId());
     }
+
+
+//    @RequestMapping(path = "/transfers", method = RequestMethod.POST)
+//    public Transfer addTransfertoTable(SqlRowSet rs) {
+//         userDao.mapRowToTransfer(getTransferDetails().setAccountFrom()
+//    }
+
 
     // TODO:
 //  1) get from_account (create dao method to get balance)

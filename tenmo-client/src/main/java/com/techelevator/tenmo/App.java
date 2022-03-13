@@ -155,8 +155,6 @@ public class App {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(currentUser.getToken());
 
-        Transfer transfer = new Transfer();
-
         if (currentUserBalance <= 0.00) {
             System.out.println("Insufficient Funds for Transfer");
         } else if (currentUserBalance > 0.00) {
@@ -165,15 +163,11 @@ public class App {
             System.out.println("");
             printListOfUsers();
             System.out.println("");
-            consoleService.promptForTransfers();
+            Transfer transfer = consoleService.promptForTransfers();
 
             if (transferAmount < 0 || transferAmount > currentUserBalance) {
                 System.out.println("Please enter a correct amount to transfer.");
             } else {
-                //have not tested these 3 lines of code:
-                transfer.setTransferAmount(consoleService.promptForTransfers().transferAmount);
-                transfer.setAccountFrom(currentUser.getUser().getId());
-                transfer.setAccountTo(consoleService.promptForTransfers().accountTo);
 
                 HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
                 ResponseEntity<Transfer> response = restTemplate.exchange(API_BASE_URL + "transfers", HttpMethod.POST, entity, Transfer.class);

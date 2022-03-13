@@ -52,7 +52,7 @@ public class ConsoleService {
     public Transfer promptForTransfers() {
         int userId = promptForInt("Enter User ID of Recipient: ");
         BigDecimal transferAmount = promptForBigDecimal("Enter Amount to Transfer: ");
-        return new Transfer(userId, transferAmount);
+        return new Transfer((long)userId,transferAmount);
     }
 
 
