@@ -57,21 +57,41 @@ public class JdbcUserDao implements UserDao {
         transfer.setTransferStatusId(rs.getLong("transfer_status_id"));
         transfer.setAccountFrom(rs.getLong("account_from"));
         transfer.setAccountTo(rs.getLong("account_to"));
-        transfer.setTransferAmount(rs.getDouble("transfer_amount"));
+        transfer.setAmount(rs.getDouble("amount"));
         return transfer;
     }
+
 
     //************  NEW METHOD ************\\
-    public Transfer sendBucks(Long transferId) {
-        Transfer transfer = new Transfer();
-        String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES (2, 2, ?, ?, ?)"
-        + "RETURNING transfer_id";
-
-        jdbcTemplate.update(sql, transfer.accountFrom*2, transfer.accountTo*2, transfer.transferAmount);
-
-        return transfer;
+    @Override
+    public Transfer createNewTransfer(Transfer transfer) {
+        Transfer transfer2 = null;
+        String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount)" +
+                " VALUES (2, 2, ?, ?, ?) RETURNING transfer_id;";
+        Long transferId = null;
+        try {
+            transferId = jdbcTemplate.queryForObject(sql, Long.class, transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
+        }
+        catch (DataAccessException e) {
+            //do nothing
+        }
+        transfer2 = getTransferByTransferId(transferId);
+        return transfer2;
     }
 
+    @Override
+    public Transfer getTransferByTransferId(Long transferId) {
+        Transfer transfer = new Transfer();
+        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfer WHERE transfer_id = ?;";
+        SqlRowSet response = jdbcTemplate.queryForRowSet(sql, transferId);
+        if (response.next()) {
+            transfer = mapRowToTransfer(response);
+            System.out.println(transfer.getAmount());
+            System.out.println(transfer.getAccountFrom());
+
+        }
+        return transfer;
+    }
 
     @Override
     public int findIdByUsername(String username) {

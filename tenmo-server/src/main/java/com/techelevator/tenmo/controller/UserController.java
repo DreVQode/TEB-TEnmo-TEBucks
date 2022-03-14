@@ -35,10 +35,10 @@ public class UserController {
 
     //************  NEW METHOD ************\\
     @RequestMapping (path = "/transfers", method = RequestMethod.POST)
-    public Transfer sendBucks(@RequestBody Transfer transfer, Principal principal) {
-        int userId = userDao.findIdByUsername(principal.getName());
+    public Transfer sendBucks(@RequestBody Transfer transfer) {
+ //       int userId = userDao.findIdByUsername(principal.getName());
+        return userDao.createNewTransfer(transfer);
 //    TODO use info in transfer to adjust from_account, to_account and create transfer record
-        return transfer;
     }
 
     //************  NEW METHOD ************\\

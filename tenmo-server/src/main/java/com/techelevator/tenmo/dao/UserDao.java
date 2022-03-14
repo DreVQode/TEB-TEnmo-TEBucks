@@ -21,7 +21,7 @@ public interface UserDao {
     List<User> listOfUsersExcludingUserId(int idToFilter);
 
     //************  NEW METHOD ************\\
-    Transfer sendBucks(Long id);
+//    Transfer sendBucks(Long id);
 
     //************  NEW METHOD ************\\
     Transfer viewTransferHistory(Long transferId);
@@ -29,4 +29,7 @@ public interface UserDao {
     //************  NEW METHOD ************\\
     public Transfer mapRowToTransfer(SqlRowSet rs);
 
+    public Transfer getTransferByTransferId(Long transferId);
+
+    public Transfer createNewTransfer(Transfer transfer);
 }
